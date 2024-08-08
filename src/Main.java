@@ -53,7 +53,12 @@ public class Main {
                         total -= total * (discountvalue / 100);
                         System.out.println("Total amount to be paid : " + total);
 
-                        System.out.println("Enter the amount of cash you want to give : ");
+                      
+                    }else {
+                        System.out.println("Discount not applied");
+                    }
+
+                      System.out.println("Enter the amount of cash you want to give : ");
                         int money = sc.nextInt();
 
                         if (money > total){
@@ -104,9 +109,6 @@ public class Main {
                             System.out.println("1 : " + j);
                         }
                         }
-                    }else {
-                        System.out.println("Discount not applied");
-                    }
                 }else{
                     System.out.println("VAT not charged");
                 }
