@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Sales</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="h-screen flex flex-col bg-gray-100">
+  <header id="navbar"
+    class="flex items-center justify-between bg-blue-900 text-white px-4 py-3 shadow-md transition-all duration-300">
+    <button id="menuBtn" class="text-white focus:outline-none">
+      ☰
+    </button>
+    <div id="navUser" class="flex items-center space-x-2 ml-auto">
+      <img src="BKIM-LOGO.png" class="w-10 h-10 rounded-full">
+      <span class="font-medium">BKIM</span>
+    </div>
+  </header>
+
+  <div class="flex flex-1">
+    <aside id="sidebar" class="w-64 bg-gray-800 text-white flex flex-col p-4 transition-transform duration-300">
+      <div class="flex flex-col items-center mb-6">
+        <img src="user_avatar.jpg" class="w-20 h-20 rounded-full mb-2">
+        <p class="font-semibold">User name</p>
+      </div>
+
+      <nav class="flex-1">
+        <ul class="space-y-4">
+          <li><a href="billing.html" class="block hover:text-blue-400">Billing</a></li>
+          <li><a href="sales.html" class="block hover:text-blue-400 font-bold">Sales</a></li>
+          <li><a href="profit.html" class="block hover:text-blue-400">Profit</a></li>
+          <li><a href="stock.html" class="block hover:text-blue-400">Stock</a></li>
+        </ul>
+      </nav>
+
+      <button onclick="logoutUser()" class="mt-auto text-left hover:text-red-400">Log out</button>
+    </aside>
+
+    <main id="mainContent" class="flex-1 p-6 transition-all duration-300" style="margin-left:0rem;">
+      <h1 class="text-2xl font-bold">Dashboard Content - Sales</h1>
+      <div>
+        <input id="searchBox" type="text" placeholder="Search product..." class="w-full p-2 border rounded">
+      </div>
+
+      <div class="overflow-x-auto mt-4">
+        <table class="w-full border-collapse border">
+          <thead class="bg-blue-900 text-white">
+            <tr>
+              <th class="p-2 border">Code</th>
+              <th class="p-2 border">Name</th>
+              <th class="p-2 border">Price</th>
+              <th class="p-2 border">Qty</th>
+            </tr>
+          </thead>
+          <tbody id="productTable"></tbody>
+        </table>
+      </div>
+      <div class="bg-white p-6  items-center justify-center mt-6 ">
+        <canvas id="pieChart" class="w-[500px] h-[500px]"></canvas>
+      </div>
+    </main>
+  </div>
+
+  <script src="sidebar.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="sales/piechart.js"></script>
+  <script>
+    const productTable = document.getElementById("productTable");
+    const searchBox = document.getElementById("searchBox");
+
+    let products = [];
+
+    fetch('./products.json')
+      .then(response => response.json())
+      .then(data => {
+        products = data;
+        renderProducts(products);
+      });
+
+    function renderProducts(list) {
+      productTable.innerHTML = "";
+      list.forEach(product => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td class="p-2 border">${product.code}</td>
+          <td class="p-2 border">
+            <button class="text-blue-600 hover:underline font-semibold" 
+          onclick="handleProductClick('${product.name}')">
+           ${product.name}
+          </button>
+
+          </td>
+          <td class="p-2 border">${product.price}</td>
+          <td class="p-2 border">${product.qty}</td>
+        `;
+        productTable.appendChild(row);
+      });
+    }
+
+    searchBox.addEventListener("input", (e) => {
+      const filter = e.target.value.toLowerCase();
+      const filtered = products.filter(p => p.name.toLowerCase().includes(filter));
+      renderProducts(filtered);
+    });
+
+
+  </script>
+</body>
+
+</html>

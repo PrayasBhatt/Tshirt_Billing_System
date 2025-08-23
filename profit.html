@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Profit</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="h-screen flex flex-col bg-gray-100">
+  <!-- Navbar -->
+  <header id="navbar" class="flex items-center justify-between bg-blue-900 text-white px-4 py-3 shadow-md transition-all duration-300">
+    <button id="menuBtn" class="text-white focus:outline-none">☰</button>
+    <div id="navUser" class="flex items-center space-x-2 ml-auto">
+      <img src="BKIM-LOGO.png" class="w-10 h-10 rounded-full">
+      <span class="font-medium">BKIM</span>
+    </div>
+  </header>
+
+  <div class="flex flex-1">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-gray-800 text-white flex flex-col p-4 transition-transform duration-300">
+      <div class="flex flex-col items-center mb-6">
+        <img src="user_avatar.jpg" class="w-20 h-20 rounded-full mb-2">
+        <p class="font-semibold">User name</p>
+      </div>
+      <nav class="flex-1">
+        <ul class="space-y-4">
+          <li><a href="billing.html" class="block hover:text-blue-400">Billing</a></li>
+          <li><a href="sales.html" class="block hover:text-blue-400">Sales</a></li>
+          <li><a href="profit.html" class="block hover:text-blue-400 font-bold">Profit</a></li>
+          <li><a href="stock.html" class="block hover:text-blue-400">Stock</a></li>
+        </ul>
+      </nav>
+      <button onclick="logoutUser()" class="mt-auto text-left hover:text-red-400">Log out</button>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="mainContent" class="flex-1 p-6 transition-all duration-300" style="margin-left:0rem;">
+      <h1 class="text-2xl font-bold mb-4">Profit Graph</h1>
+      <div class="bg-white p-6 rounded-lg shadow-md h-[500px]">
+        <canvas id="profitChart"></canvas>
+      </div>
+    </main>
+  </div>
+
+  <script src="sidebar.js"></script>
+  <script>
+    fetch('./products.json')
+      .then(response => response.json())
+      .then(data => {
+        const profitMargin = 0.2;
+
+        const labels = data.map(p => p.name);
+        const profits = data.map(p => (p.price * profitMargin) * p.sales);
+
+        const colors = [
+          'rgba(255, 99, 132, 0.7)',   
+          'rgba(54, 162, 235, 0.7)',   
+          'rgba(255, 206, 86, 0.7)',  
+          'rgba(75, 192, 192, 0.7)', 
+          'rgba(153, 102, 255, 0.7)'   
+        ];
+
+        const borderColors = [
+          'rgba(255, 99, 132, 1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)',
+          'rgba(153, 102, 255, 1)'
+        ];
+
+        const ctx = document.getElementById('profitChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Total Profit',
+              data: profits,
+              backgroundColor: colors,
+              borderColor: borderColors,
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return "Profit: Rs " + context.raw;
+                  }
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: { display: true, text: 'Profit (Rs)' }
+              }
+            }
+          }
+        });
+      })
+      .catch(err => console.error("Error loading JSON:", err));
+  </script>
+</body>
+</html>
