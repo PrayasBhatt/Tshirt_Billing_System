@@ -1,7 +1,0 @@
-[
-  { "code": "P001", "name": "T-Shirt Red", "price": 500, "qty": 20 , "sales": 100 },
-  { "code": "P002", "name": "T-Shirt Blue", "price": 600, "qty": 20 , "sales": 150 },
-  { "code": "P003", "name": "Jeans Black", "price": 1200, "qty": 20 , "sales": 200 },
-  { "code": "P004", "name": "Cap", "price": 250, "qty": 21 , "sales": 80 },
-  { "code": "P005", "name": "Jacket", "price": 2599, "qty": 39 , "sales": 200 }
-]
